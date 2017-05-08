@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 27 23:10:04 2017
+Created on Mon Mar 20 23:10:04 2017
 
-@author: Lei Su
+@author: Administrator
 """
 
 from numpy import *  
@@ -48,7 +48,7 @@ DataLoad_nonbot = pd.read_csv('nonbots_data.csv')
 DataSet_nonbot = DataLoad_nonbot[['followers_count','friends_count','listedcount','favourites_count','verified','statuses_count','default_profile','has_extended_profile','bot']]
 DataSet = pd.concat([DataSet_bot,DataSet_nonbot])
 DataSet = mat(DataSet,dtype=np.float32)
-DataSet = np.random.permutation(DataSet)
+#fDataSet = np.random.permutation(DataSet)
 startnum_train = 1800
 endnum_train = 2197
 train_x = inputData(DataSet[:startnum_train,:8])#columns=['followers_count','friends_count','listed_count','favourites_count','verified','statuses_count','default_profile','default_profile_image','has_extended_profile'])
@@ -63,11 +63,11 @@ test_y = labelData(DataSet[startnum_train:endnum_train,8:9])#,columns=['bot'])
 #print (test_y)
 ## step 2: training...  
 print "step 2: training..."  
-C = 0.6  
+C = 1000  
 toler = 0.001
 maxIter = 50 
-svmClassifier = SVM.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 1.0))  
-print (svmClassifier.alphas.A)
+svmClassifier = SVM.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('rbf', 1))  
+#print (svmClassifier.alphas.A)
 ## step 3: testing  
 print "step 3: testing..."  
 accuracy = SVM.testSVM(svmClassifier, test_x, test_y)  

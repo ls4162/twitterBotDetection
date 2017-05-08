@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 27 20:06:49 2017
+Created on Mon Mar 20 20:06:49 2017
 
-@author: Lei Su
+@author: Administrator
 """
 
 from numpy import * 
@@ -232,20 +232,39 @@ def testSVM(svm, test_x, test_y):
     numTestSamples = test_x.shape[0]  
     supportVectorsIndex = nonzero(svm.alphas.A > 0)[0]#取非零元素的index  
     supportVectors      = svm.train_x[supportVectorsIndex] 
-    print (supportVectorsIndex)
+    #print (supportVectorsIndex)
     supportVectorLabels = svm.train_y[supportVectorsIndex]  
     supportVectorAlphas = svm.alphas[supportVectorsIndex]  
     matchCount = 0  
+    
     for i in xrange(numTestSamples):  
         kernelValue = calcKernelValue(supportVectors, test_x[i, :], svm.kernelOpt)  
-        print (kernelValue)
-        predict = kernelValue.T * multiply(supportVectorLabels, supportVectorAlphas) + svm.b  
-        print (predict)
+        #print (kernelValue)
+        predict = kernelValue.T * multiply(supportVectorLabels, supportVectorAlphas) + svm.b
+        
+        #print (predict)
         if sign(predict) == sign(test_y[i]):  
             matchCount += 1
 #            print(sign(predict))
 #            print(test_y[i])
     accuracy = float(matchCount) / numTestSamples  
-    return accuracy  
+    return accuracy
   
-  
+def predSVM(svm, test_x):  
+    test_x = mat(test_x)  
+     
+    #print (test_x)
+    numTestSamples = test_x.shape[0]  
+    supportVectorsIndex = nonzero(svm.alphas.A > 0)[0]#取非零元素的index  
+    supportVectors      = svm.train_x[supportVectorsIndex] 
+    #print (supportVectorsIndex)
+    supportVectorLabels = svm.train_y[supportVectorsIndex]  
+    supportVectorAlphas = svm.alphas[supportVectorsIndex]  
+    
+    temp = []
+    for i in xrange(numTestSamples):  
+        kernelValue = calcKernelValue(supportVectors, test_x[i, :], svm.kernelOpt)  
+        #print (kernelValue)
+        predict = kernelValue.T * multiply(supportVectorLabels, supportVectorAlphas) + svm.b
+        temp.append(predict)
+    return temp
